@@ -49,6 +49,8 @@ function App() {
   const [seasons, setSeasons] = useState<string[]>([]); // シーズン一覧
   const [selectedSeason, setSelectedSeason] = useState<string>('2025spring'); // 選択されたシーズン
 
+  console.log(`${import.meta.env.VITE_SUPABASE_URL}`)
+
   useEffect(() => {
     const fetchSeasons = async () => {
       const res = await fetch(
