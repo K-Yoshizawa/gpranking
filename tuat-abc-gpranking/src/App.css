@@ -1,0 +1,124 @@
+/* 全体のコンテナ */
+.app-container {
+  font-family: Arial, sans-serif;
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* タイトル */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* シーズンセレクター */
+.season-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.season-selector label {
+  font-size: 1rem;
+  margin-right: 10px;
+  color: #555;
+}
+
+#season-select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+#season-select:hover {
+  border-color: #007bff;
+}
+
+/* テーブルをスクロール可能にする親コンテナ */
+.table-container {
+  overflow-x: auto; /* 横スクロールを有効化 */
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* テーブル */
+.results-table {
+  width: 100%;
+  min-width: 800px; /* 必要に応じて最小幅を設定 */
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.results-table th,
+.results-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.results-table th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.results-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.results-table tr:hover {
+  background-color: #e9f5ff;
+}
+
+.results-table td a {
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.results-table td a:hover {
+  color: #007bff;
+}
+
+/* ローディングメッセージ */
+p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* 金色のセル */
+.gold {
+  background-color: gold;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 銀色のセル */
+.silver {
+  background-color: silver;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 銅色のセル */
+.bronze {
+  background-color: #cd7f32;
+  color: #fff;
+  font-weight: bold;
+}
