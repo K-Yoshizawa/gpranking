@@ -159,13 +159,13 @@ function App() {
           <table className="results-table">
             <thead>
               <tr>
-                <th>Rank</th>
+                <th>#</th>
                 <th>User</th>
                 <th>Final Rating</th>
-                <th>Update Highest</th>
-                <th>Place GP</th>
-                <th>Update GP</th>
                 <th>Total GP</th>
+                <th>Highest Δ</th>
+                <th>Rank GP</th>
+                <th>Update GP</th>
                 {abcColumns.map((abc) => (
                   <th key={abc}>{`ABC ${abc}`}</th>
                 ))}
@@ -189,10 +189,10 @@ function App() {
                     </a>
                   </td>
                   <td style={{ color: getRatingColor(result.final_rating) }}>{result.final_rating}</td>
-                  <td>{result.update_highest}</td>
+                  <td>{result.total_gp}</td>
+                  <td>+{result.update_highest}</td>
                   <td>{result.place_gp}</td>
                   <td>{result.update_gp}</td>
-                  <td>{result.total_gp}</td>
                   {abcColumns.map((abc) => {
                     const contestResult = contestResults.find(
                       (r) => r.user === result.user && r.abc === abc
