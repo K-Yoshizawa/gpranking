@@ -2,11 +2,7 @@ import requests
 from supabase import create_client, Client
 import re
 from datetime import datetime
-
-# Supabaseの設定
-SUPABASE_URL = "https://eyovmmmctjykuujowalk.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5b3ZtbW1jdGp5a3V1am93YWxrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0Mzg4MDI4NCwiZXhwIjoyMDU5NDU2Mjg0fQ.dIvlvBZknr-w7VQL4pUejq2glttB_c0KM69Vil9jyJk"
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+import sys
 
 # AtCoderユーザーリスト
 users = [
@@ -194,4 +190,7 @@ def main():
     # print("Data saved to results.json")
 
 if __name__ == "__main__":
+    global supabase
+    SUPABASE_URL, SUPABASE_KEY = sys.argv[1], sys.argv[2]
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     main()
