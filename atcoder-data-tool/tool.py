@@ -4,8 +4,6 @@ import re
 from datetime import datetime
 import sys
 
-global supabase
-
 # AtCoderユーザーリスト
 users = [
     "lX57",
@@ -192,6 +190,7 @@ def main():
     # print("Data saved to results.json")
 
 if __name__ == "__main__":
+    global supabase
     SUPABASE_URL, SUPABASE_KEY = sys.argv[1], sys.argv[2]
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     main()
