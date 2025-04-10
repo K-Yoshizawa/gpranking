@@ -10,6 +10,7 @@ type SeasonResult = {
   place_gp: number;
   update_gp: number;
   total_gp: number;
+  final_highest: number; // 新しいプロパティを追加
 };
 
 // contest_result の型
@@ -163,6 +164,7 @@ function App() {
                 <th>User</th>
                 <th>Final Rating</th>
                 <th>Total GP</th>
+                <th>Highest</th>
                 <th>Highest Δ</th>
                 <th>Rank GP</th>
                 <th>Update GP</th>
@@ -190,6 +192,7 @@ function App() {
                   </td>
                   <td style={{ color: getRatingColor(result.final_rating) }}>{result.final_rating}</td>
                   <td>{result.total_gp}</td>
+                  <td style={{ color: getRatingColor(result.final_highest) }}>{result.final_highest}</td>
                   <td>+{result.update_highest}</td>
                   <td>{result.place_gp}</td>
                   <td>{result.update_gp}</td>
