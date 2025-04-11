@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      
+      - name: Set environment variables
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.DB_URL }}
+          VITE_SUPABASE_API_KEY: ${{ secrets.DB_REF }}
+        run: echo "Environment variables set"
 
       - name: Install dependencies
         run: npm install
