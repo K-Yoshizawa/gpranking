@@ -36,6 +36,7 @@ users = [
     "phenol256",
     "marimontanus",
     "iru28",
+    "Supacampas",
 ]
 
 # ユーザーごとの集計期間設定
@@ -70,6 +71,7 @@ user_periods = {
     "phenol256": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
     "marimontanus": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
     "iru28": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
+    "Supacampas": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
 }
 
 def fetch_atcoder_data(user: str):
