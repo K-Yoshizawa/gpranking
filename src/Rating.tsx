@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'; // CSSファイルをインポート
 
 type UserRating = {
@@ -20,7 +20,6 @@ const getRatingColor = (rating: number): string => {
 function Rating() {
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortColumn, setSortColumn] = useState<'newRating' | 'highest'>('newRating');
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -80,7 +79,6 @@ function Rating() {
   }, []);
 
   const handleSort = (column: 'newRating' | 'highest') => {
-    setSortColumn(column);
     setRatings((prevRatings) =>
       [...prevRatings].sort((a, b) => b[column] - a[column])
     );

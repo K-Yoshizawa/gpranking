@@ -177,7 +177,6 @@ function HomePage({
   contestResults: ContestResult[];
 }) {
   const [sortedResults, setSortedResults] = useState<SeasonResult[]>([]);
-  const [sortColumn, setSortColumn] = useState<'final_rating' | 'total_gp' | 'final_highest' | 'update_highest' | 'place_gp' | 'update_gp' | number>('total_gp');
 
   useEffect(() => {
     // デフォルトで Total GP で降順ソート
@@ -186,8 +185,6 @@ function HomePage({
   }, [seasonResults]);
 
   const handleSort = (column: 'final_rating' | 'total_gp' | 'final_highest' | 'update_highest' | 'place_gp' | 'update_gp' | number) => {
-    setSortColumn(column);
-
     const sorted = [...sortedResults].sort((a, b) => {
       if (typeof column === 'number') {
         // ABC 列のソート
