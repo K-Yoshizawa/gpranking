@@ -136,7 +136,7 @@ function App() {
   }, [selectedSeason]);
 
   return (
-    <Router>
+    <Router basename="/gpranking">
       <div className="app-container">
         <MenuBar />
         <Routes>

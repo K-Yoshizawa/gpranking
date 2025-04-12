@@ -16,7 +16,7 @@ function MenuBar() {
         </li>
         <li>
           <NavLink
-            to="/rule"
+            to="rule"
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             Rule
@@ -24,7 +24,7 @@ function MenuBar() {
         </li>
         <li>
           <NavLink
-            to="/rating"
+            to="rating"
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             Rating
