@@ -3,76 +3,14 @@ from supabase import create_client, Client
 import re
 from datetime import datetime
 import sys
+import json
 
-# AtCoderユーザーリスト
-users = [
-    "lX57",
-    "new_textfile", 
-    "kobaryo222", 
-    "ngng628", 
-    "sunrize", 
-    "Sakasu",
-    "sugawa197203",
-    "toufu24",
-    "nigs",
-    "m0w0mY",
-    "kinsenka",
-    "SaSaSato",
-    "OJII3",
-    "shimaaa",
-    "uPis",
-    "yugudora",
-    "tyantama",
-    "Yufox",
-    "ru322",
-    "mr63tnegi",
-    "shojusen",
-    "Inoyu",
-    "p0te_",
-    "tarakonpota",
-    "genchan_omega",
-    "shun_shobon",
-    "konpeitoo11",
-    "phenol256",
-    "marimontanus",
-    "iru28",
-    "Supacampas",
-]
+# JSONファイルからデータを読み込む
+with open('../public/users.json', 'r') as f:
+    users = json.load(f)
 
-# ユーザーごとの集計期間設定
-user_periods = {
-    "lX57": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月
-    "new_textfile": {"start": "202304", "end": "202603"},  # 集計期間: 2023年4月～2026年3月
-    "kobaryo222": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月
-    "ngng628": {"start": "202304", "end": "202503"},  # 集計期間: 2023年4月～2025年3月
-    "sunrize": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月
-    "Sakasu": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月
-    "sugawa197203": {"start": "202304", "end": "202703"},   # 集計期間: 2023年4月～2027年3月
-    "toufu24": {"start": "202304", "end": "202803"},  # 集計期間: 2023年4月～2028年3月
-    "nigs": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月,
-    "m0w0mY": {"start": "202304", "end": "202803"},  # 集計期間: 2023年4月～2028年3月,
-    "kinsenka": {"start": "202304", "end": "202803"},  # 集計期間: 2023年4月～2028年3月,
-    "SaSaSato": {"start": "202304", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "OJII3": {"start": "202304", "end": "202803"},  # 集計期間: 2023年4月～2028年3月,
-    "shimaaa": {"start": "202304", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "uPis": {"start": "202304", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "yugudora": {"start": "202304", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "tyantama": {"start": "202304", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "Yufox": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "ru322": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "mr63tnegi": {"start": "202404", "end": "202703"},  # 集計期間: 2024年4月～2027年3月,
-    "shojusen": {"start": "202404", "end": "202803"},  # 集計期間: 2023年4月～2028年3月,
-    "Inoyu": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "p0te_": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "tarakonpota": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "genchan_omega": {"start": "202304", "end": "202703"},  # 集計期間: 2023年4月～2027年3月,
-    "shun_shobon": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "konpeitoo11": {"start": "202404", "end": "202803"},  # 集計期間: 2024年7月～2028年3月,
-    "phenol256": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "marimontanus": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "iru28": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-    "Supacampas": {"start": "202404", "end": "202803"},  # 集計期間: 2024年4月～2028年3月,
-}
+with open('../public/user_periods.json', 'r') as f:
+    user_periods = json.load(f)
 
 def fetch_atcoder_data(user: str):
     """AtCoderからユーザーのコンテスト履歴を取得"""
@@ -170,7 +108,7 @@ def upload_to_supabase(user: str, contests: list):
         # 既存データの確認
         existing = supabase.table("contest_result").select("abc").eq("user", user).eq("abc", contest["abc"]).execute()
         if existing.data:
-            print(f"Data for user={user}, abc={contest['abc']} already exists. Skipping...")
+            # print(f"Data for user={user}, abc={contest['abc']} already exists. Skipping...")
             continue
 
         # データの挿入
