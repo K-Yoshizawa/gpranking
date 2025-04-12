@@ -1,0 +1,41 @@
+.menu-bar {
+  position: fixed; /* ページ全体の上部に固定 */
+  top: 0;
+  left: 0;
+  width: 100%; /* ブラウザ全体の幅に対応 */
+  background-color: #333;
+  padding: 15px 20px; /* 上下左右に余白を追加して広く見せる */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1000; /* 他の要素より前面に表示 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 下に影を追加 */
+  box-sizing: border-box; /* パディングを含めて幅を計算 */
+}
+
+.menu-bar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.menu-bar li {
+  margin-right: 20px;
+}
+
+.menu-bar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px; /* リンクのクリック範囲を広げる */
+  border-radius: 4px;
+}
+
+.menu-bar a:hover {
+  background-color: #555;
+}
+
+.menu-bar .active {
+  background-color: #007bff;
+  color: white;
+}

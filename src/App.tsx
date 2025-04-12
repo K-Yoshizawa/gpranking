@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import './App.css'; // CSSファイルをインポート
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import './App.css';
+import MenuBar from './MenuBar';
+import Rule from './Rule';
+import Rating from './Rating';
 
 // season_result の型
 type SeasonResult = {
@@ -10,7 +14,7 @@ type SeasonResult = {
   place_gp: number;
   update_gp: number;
   total_gp: number;
-  final_highest: number; // 新しいプロパティを追加
+  final_highest: number;
 };
 
 // contest_result の型
@@ -47,10 +51,8 @@ function App() {
   const [seasonResults, setSeasonResults] = useState<SeasonResult[]>([]);
   const [contestResults, setContestResults] = useState<ContestResult[]>([]);
   const [abcColumns, setAbcColumns] = useState<number[]>([]);
-  const [seasons, setSeasons] = useState<string[]>([]); // シーズン一覧
-  const [selectedSeason, setSelectedSeason] = useState<string>('2025spring'); // 選択されたシーズン
-
-  console.log(`${import.meta.env.VITE_SUPABASE_URL}`)
+  const [seasons, setSeasons] = useState<string[]>([]);
+  const [selectedSeason, setSelectedSeason] = useState<string>('2025spring');
 
   useEffect(() => {
     const fetchSeasons = async () => {
@@ -65,19 +67,16 @@ function App() {
       );
       const json: SeasonResult[] = await res.json();
 
-      // season 列のユニークな値を取得
       const uniqueSeasons = Array.from(new Set(json.map((result) => result.season)));
-
-      // ソートロジック: 年の降順、季節の順序は winter -> autumn -> summer -> spring
       const seasonOrder = ['winter', 'autumn', 'summer', 'spring'];
       uniqueSeasons.sort((a, b) => {
         const [yearA, seasonA] = a.match(/(\d+)(\w+)/)!.slice(1);
         const [yearB, seasonB] = b.match(/(\d+)(\w+)/)!.slice(1);
 
         if (yearA !== yearB) {
-          return parseInt(yearB) - parseInt(yearA); // 年の降順
+          return parseInt(yearB) - parseInt(yearA);
         }
-        return seasonOrder.indexOf(seasonA) - seasonOrder.indexOf(seasonB); // 季節の順序
+        return seasonOrder.indexOf(seasonA) - seasonOrder.indexOf(seasonB);
       });
 
       setSeasons(uniqueSeasons);
@@ -99,7 +98,6 @@ function App() {
       );
       const json = await res.json();
 
-      // Total GP の降順、Total GP が等しい場合は Place GP の降順でソート
       const sortedResults = json.sort((a: SeasonResult, b: SeasonResult) => {
         if (b.total_gp === a.total_gp) {
           return b.place_gp - a.place_gp;
@@ -122,13 +120,12 @@ function App() {
       );
       const json: ContestResult[] = await res.json();
 
-      // abc列を動的に取得
       const abcSet = new Set<number>();
       json.forEach((result) => {
         abcSet.add(result.abc);
       });
 
-      const sortedAbcColumns = Array.from(abcSet).sort((a, b) => a - b); // abc列を昇順でソート
+      const sortedAbcColumns = Array.from(abcSet).sort((a, b) => a - b);
       setAbcColumns(sortedAbcColumns);
 
       setContestResults(json);
@@ -139,7 +136,79 @@ function App() {
   }, [selectedSeason]);
 
   return (
-    <div className="app-container">
+    <Router>
+      <div className="app-container">
+        <MenuBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                selectedSeason={selectedSeason}
+                setSelectedSeason={setSelectedSeason}
+                seasons={seasons}
+                seasonResults={seasonResults}
+                abcColumns={abcColumns}
+                contestResults={contestResults}
+              />
+            }
+          />
+          <Route path="/rule" element={<Rule />} />
+          <Route path="/rating" element={<Rating />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+function HomePage({
+  selectedSeason,
+  setSelectedSeason,
+  seasons,
+  seasonResults,
+  abcColumns,
+  contestResults,
+}: {
+  selectedSeason: string;
+  setSelectedSeason: React.Dispatch<React.SetStateAction<string>>;
+  seasons: string[];
+  seasonResults: SeasonResult[];
+  abcColumns: number[];
+  contestResults: ContestResult[];
+}) {
+  const [sortedResults, setSortedResults] = useState<SeasonResult[]>([]);
+  const [sortColumn, setSortColumn] = useState<'final_rating' | 'total_gp' | 'final_highest' | 'update_highest' | 'place_gp' | 'update_gp' | number>('total_gp');
+
+  useEffect(() => {
+    // デフォルトで Total GP で降順ソート
+    const sorted = [...seasonResults].sort((a, b) => b.total_gp - a.total_gp);
+    setSortedResults(sorted);
+  }, [seasonResults]);
+
+  const handleSort = (column: 'final_rating' | 'total_gp' | 'final_highest' | 'update_highest' | 'place_gp' | 'update_gp' | number) => {
+    setSortColumn(column);
+
+    const sorted = [...sortedResults].sort((a, b) => {
+      if (typeof column === 'number') {
+        // ABC 列のソート
+        const contestA = contestResults.find((r) => r.user === a.user && r.abc === column);
+        const contestB = contestResults.find((r) => r.user === b.user && r.abc === column);
+
+        const placeA = contestA?.tuat_place || Infinity; // null の場合は最下位扱い
+        const placeB = contestB?.tuat_place || Infinity;
+
+        return placeA - placeB; // 昇順ソート（順位が小さいほど上位）
+      } else {
+        // 他の列のソート
+        return b[column] - a[column];
+      }
+    });
+
+    setSortedResults(sorted);
+  };
+
+  return (
+    <div>
       <h1 className="title">TUAT ABC GP Ranking</h1>
       <div className="season-selector">
         <label htmlFor="season-select">Select Season: </label>
@@ -155,26 +224,40 @@ function App() {
           ))}
         </select>
       </div>
-      {seasonResults.length > 0 ? (
+      {sortedResults.length > 0 ? (
         <div className="table-container">
           <table className="results-table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>User</th>
-                <th>Final Rating</th>
-                <th>Total GP</th>
-                <th>Highest</th>
-                <th>Highest Δ</th>
-                <th>Rank GP</th>
-                <th>Update GP</th>
+                <th onClick={() => handleSort('final_rating')} style={{ cursor: 'pointer' }}>
+                  Final Rating
+                </th>
+                <th onClick={() => handleSort('total_gp')} style={{ cursor: 'pointer' }}>
+                  Total GP
+                </th>
+                <th onClick={() => handleSort('final_highest')} style={{ cursor: 'pointer' }}>
+                  Highest
+                </th>
+                <th onClick={() => handleSort('update_highest')} style={{ cursor: 'pointer' }}>
+                  Highest Δ
+                </th>
+                <th onClick={() => handleSort('place_gp')} style={{ cursor: 'pointer' }}>
+                  Rank GP
+                </th>
+                <th onClick={() => handleSort('update_gp')} style={{ cursor: 'pointer' }}>
+                  Update GP
+                </th>
                 {abcColumns.map((abc) => (
-                  <th key={abc}>{`ABC ${abc}`}</th>
+                  <th key={abc} onClick={() => handleSort(abc)} style={{ cursor: 'pointer' }}>
+                    {`ABC ${abc}`}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {seasonResults.map((result, index) => (
+              {sortedResults.map((result, index) => (
                 <tr key={result.user}>
                   <td>{index + 1}</td>
                   <td>
@@ -202,7 +285,6 @@ function App() {
                     );
                     const placeGp = calculatePlaceGp(contestResult?.tuat_place || null);
 
-                    // 値に応じてクラスを決定
                     let cellClass = '';
                     if (placeGp >= 20) {
                       cellClass = 'gold';
