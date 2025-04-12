@@ -9,7 +9,7 @@ function MenuBar() {
           <NavLink
             to="/"
             className={({ isActive }) => (isActive ? 'active' : '')}
-            end /* ルートパスに正確に一致する場合に選択状態にする */
+            end
           >
             Home
           </NavLink>
