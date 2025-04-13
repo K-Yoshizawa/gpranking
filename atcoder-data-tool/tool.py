@@ -6,10 +6,10 @@ import sys
 import json
 
 # JSONファイルからデータを読み込む
-with open('../public/users.json', 'r') as f:
+with open('./public/users.json', 'r') as f:
     users = json.load(f)
 
-with open('../public/user_periods.json', 'r') as f:
+with open('./public/user_periods.json', 'r') as f:
     user_periods = json.load(f)
 
 def fetch_atcoder_data(user: str):
@@ -101,33 +101,29 @@ def upload_to_supabase(user: str, contests: list):
             "new_rating": contest["new_rating"],
             "highest": contest["highest"],
             "performance": contest["performance"],
-            "season": contest["season"],  # season を追加
-            "update_highest": contest["update_highest"],  # update_highest を追加
+            "season": contest["season"],
+            "update_highest": contest["update_highest"],
         }
 
         # 既存データの確認
-        existing = supabase.table("contest_result").select("abc").eq("user", user).eq("abc", contest["abc"]).execute()
+        existing = supabase.table("contest_result").select("general_place").eq("user", user).eq("abc", contest["abc"]).execute()
         if existing.data:
-            # print(f"Data for user={user}, abc={contest['abc']} already exists. Skipping...")
+            if existing.data[0]['general_place'] != contest['general_place']:
+                supabase.table("contest_result").update(data).eq("user", user).eq("abc", contest["abc"]).execute()
+                print(f"[Update]\tUser: {user}, ABC: {contest['abc']}")
             continue
-
-        # データの挿入
-        response = supabase.table("contest_result").insert(data).execute()
+        
+        supabase.table("contest_result").insert(data).execute()
+        print(f"[Insert]\tUser: {user}, ABC: {contest['abc']}")
 
 def main():
     all_results = {}
     for user in users:
-        print(f"Fetching data for {user}...")
+        print(f"[Fetch] \tUser: {user}")
         contests = fetch_atcoder_data(user)
-        abc_contests = extract_abc_data(contests, user)  # ABCデータを抽出
+        abc_contests = extract_abc_data(contests, user)
         all_results[user] = abc_contests
-        print(f"Uploading ABC data for {user} to Supabase...")
         upload_to_supabase(user, abc_contests)
-
-    # # ローカルにデータを保存
-    # with open("results.json", "w") as f:
-    #     json.dump(all_results, f, indent=2)
-    # print("Data saved to results.json")
 
 if __name__ == "__main__":
     global supabase
