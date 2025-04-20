@@ -21,4 +21,4 @@ jobs:
           
       - name: Run script
         run: |
-          python atcoder-data-tool/tool.py ${{ secrets.DB_URL }} ${{ secrets.DB_ACCESS }}
+          python atcoder-data-tool/tool.py ${{ secrets.DB_URL }} ${{ secrets.DB_ACCESS }} ${{ secrets.ATCODER_USERNAME }} ${{ secrets.ATCODER_PASSWORD }}

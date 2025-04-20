@@ -12,10 +12,10 @@ with open('./public/users.json', 'r') as f:
 with open('./public/user_periods.json', 'r') as f:
     user_periods = json.load(f)
 
-def fetch_atcoder_data(user: str):
+def fetch_atcoder_data(user: str, session: requests.Session):
     """AtCoderからユーザーのコンテスト履歴を取得"""
     url = f"https://atcoder.jp/users/{user}/history/json"
-    response = requests.get(url)
+    response = session.get(url)
     if response.status_code == 200:
         return response.json()
     else:
@@ -117,17 +117,32 @@ def upload_to_supabase(user: str, contests: list):
         supabase.table("contest_result").insert(data).execute()
         print(f"[Insert]\tUser: {user}, ABC: {contest['abc']}")
 
-def main():
+def main(session: requests.Session):
     all_results = {}
     for user in users:
         print(f"[Fetch] \tUser: {user}")
-        contests = fetch_atcoder_data(user)
+        contests = fetch_atcoder_data(user, session)
         abc_contests = extract_abc_data(contests, user)
         all_results[user] = abc_contests
         upload_to_supabase(user, abc_contests)
 
 if __name__ == "__main__":
     global supabase
-    SUPABASE_URL, SUPABASE_KEY = sys.argv[1], sys.argv[2]
+    SUPABASE_URL, SUPABASE_KEY, ATCODER_USERNAME, ATCODER_PASSWORD = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+    
+    # AtCoder にログイン
+    session = requests.Session()
+    response = session.get("https://atcoder.jp/login")
+    response.raise_for_status()
+    token = (re.search(r'name=["\']csrf_token["\']\s+value=["\']([^"\']+)["\']', response.text)).group(1)
+    params = {
+        "csrf_token":   token,
+        "username":     ATCODER_USERNAME,
+        "password":     ATCODER_PASSWORD,
+    }
+    response = session.get("https://atcoder.jp/login", params=params)
+    response.raise_for_status()
+    print("[login]\tSuccess Login.")
+    
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-    main()
+    main(session)
