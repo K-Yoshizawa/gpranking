@@ -133,6 +133,9 @@ if __name__ == "__main__":
     # AtCoder にログイン
     session = requests.Session()
     response = session.get("https://atcoder.jp/login")
+    if response.status_code != 200:
+        print(f"Failed to get session: {response.status_code}")
+        print(response.text[:1000])
     response.raise_for_status()
     token = (re.search(r'name=["\']csrf_token["\']\s+value=["\']([^"\']+)["\']', response.text)).group(1)
     params = {
@@ -141,6 +144,9 @@ if __name__ == "__main__":
         "password":     ATCODER_PASSWORD,
     }
     response = session.get("https://atcoder.jp/login", params=params)
+    if response.status_code != 200:
+        print(f"Failed to login: {response.status_code}")
+        print(response.text[:1000])
     response.raise_for_status()
     print("[login]\tSuccess Login.")
     
