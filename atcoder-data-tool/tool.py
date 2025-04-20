@@ -20,6 +20,7 @@ def fetch_atcoder_data(user: str):
         return response.json()
     else:
         print(f"Failed to fetch data for {user}: {response.status_code}")
+        print(response.text[:1000])
         return []
 
 def extract_abc_data(contests: list, user: str):
