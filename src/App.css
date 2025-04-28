@@ -49,6 +49,32 @@
   border-color: #007bff;
 }
 
+.season-selector,
+.league-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.season-selector label,
+.league-filter label {
+  font-weight: 600;
+  margin: 0;
+}
+
+.season-selector select,
+.league-filter select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1.2;
+  height: 40px;
+}
+
 /* テーブルをスクロール可能にする親コンテナ */
 .table-container {
   overflow-x: auto; /* 横スクロールを有効化 */
@@ -57,10 +83,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* テーブル */
 .results-table {
   width: 100%;
-  min-width: 800px; /* 必要に応じて最小幅を設定 */
+  min-width: 800px;
   border-collapse: collapse;
   background-color: #fff;
   border-radius: 8px;
@@ -89,41 +114,32 @@
   background-color: #e9f5ff;
 }
 
-.results-table td a {
+.gold, .gold a {
+  background-color: gold;
   font-weight: bold;
-  transition: color 0.3s ease;
+  color: white;
+}
+.silver, .silver a {
+  background-color: silver;
+  font-weight: bold;
+  color: white;
+}
+.bronze, .bronze a {
+  background-color: peru;
+  font-weight: bold;
+  color: white;
 }
 
-.results-table td a:hover {
-  color: #007bff;
+td a {
+  text-decoration: none;
+  color: black;
+  display: block;
 }
 
-/* ローディングメッセージ */
 p {
   text-align: center;
   font-size: 1.2rem;
   color: #555;
-}
-
-/* 金色のセル */
-.gold {
-  background-color: gold;
-  color: #fff;
-  font-weight: bold;
-}
-
-/* 銀色のセル */
-.silver {
-  background-color: silver;
-  color: #fff;
-  font-weight: bold;
-}
-
-/* 銅色のセル */
-.bronze {
-  background-color: #cd7f32;
-  color: #fff;
-  font-weight: bold;
 }
 
 .rule-container .title {
@@ -132,4 +148,12 @@ p {
 
 .rule-container p {
   text-align: left;
+}
+
+.selectors {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }

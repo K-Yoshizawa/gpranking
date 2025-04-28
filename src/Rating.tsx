@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
 import './App.css'; // CSSファイルをインポート
 
+const seasonOrder: Record<string, number> = {
+  spring: 0,
+  summer: 1,
+  autumn: 2,
+  winter: 3,
+};
+function parseSeason(season: string): { year: number; order: number } {
+  const m = season.match(/(\d+)(\w+)/);
+  if (!m) return { year: 0, order: 0 };
+  return { year: +m[1], order: seasonOrder[m[2].toLowerCase()] };
+}
+
 type UserRating = {
   user: string;
   newRating: number;
@@ -20,6 +32,19 @@ const getRatingColor = (rating: number): string => {
 function Rating() {
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userPeriods, setUserPeriods] = useState<Record<string, { start: string; end: string; begin: string }>>({});
+
+  // 現在の日付からシーズンを算出
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  let currentPeriod = `${y}${(m).toString().padStart(2, '0')}`;;
+  let currentSeason = '';
+  if (4 <= m && m <= 6) currentSeason = `${y}spring`;
+  else if (7 <= m && m <= 9) currentSeason = `${y}summer`;
+  else if (10 <= m && m <= 12) currentSeason = `${y}autumn`;
+  else currentSeason = `${y - 1}winter`;
+  const { year: cy, order: co } = parseSeason(currentSeason);
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -38,19 +63,19 @@ function Rating() {
         if (!periodsResponse.ok) {
           throw new Error(`Failed to fetch user_periods.json: ${periodsResponse.status} ${periodsResponse.statusText}`);
         }
-        const userPeriods: Record<string, { start: string; end: string }> = await periodsResponse.json();
-
-        // 現在の日付を取得し、YYYYMM形式に変換
-        const now = new Date();
-        const currentPeriod = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        const periods: Record<string, { start: string; end: string; begin: string }> = await periodsResponse.json();
+        setUserPeriods(periods);
 
         const results: UserRating[] = [];
 
         for (const user of users) {
-          const period = userPeriods[user];
+          const period = periods[user];
+          // const periodEnd = period?.end ?? 'N/A';
+          // console.log('user: %s, period.end: %s, currentPeriod', user, periodEnd, currentPeriod);
 
           // ユーザーの期間が現在の日付より終了している場合はスキップ
           if (period && period.end < currentPeriod) {
+            // console.log('user: %s -> skip', user)
             continue;
           }
 
@@ -74,8 +99,7 @@ function Rating() {
             });
           }
         }
-
-        // 初期ソート: Highest ABC New Rating 列の降順
+        
         results.sort((a, b) => b.newRating - a.newRating);
 
         setRatings(results);
@@ -90,9 +114,7 @@ function Rating() {
   }, []);
 
   const handleSort = (column: 'newRating' | 'highest') => {
-    setRatings((prevRatings) =>
-      [...prevRatings].sort((a, b) => b[column] - a[column])
-    );
+    setRatings((prev) => [...prev].sort((a, b) => b[column] - a[column]));
   };
 
   return (
@@ -107,6 +129,7 @@ function Rating() {
               <tr>
                 <th>#</th>
                 <th>User Name</th>
+                <th>League</th>
                 <th onClick={() => handleSort('newRating')} style={{ cursor: 'pointer' }}>
                   Current Rating
                 </th>
@@ -116,26 +139,41 @@ function Rating() {
               </tr>
             </thead>
             <tbody>
-              {ratings.map((rating, index) => (
-                <tr key={rating.user}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <a
-                      href={`https://atcoder.jp/users/${rating.user}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: getRatingColor(rating.newRating),
-                        textDecoration: 'none',
-                      }}
-                    >
-                      {rating.user}
-                    </a>
-                  </td>
-                  <td style={{ color: getRatingColor(rating.newRating) }}>{rating.newRating}</td>
-                  <td style={{ color: getRatingColor(rating.highest) }}>{rating.highest}</td>
-                </tr>
-              ))}
+              {ratings.map((rating, index) => {
+                // League 判定
+                const begin = userPeriods[rating.user]?.begin || '';
+                const { year: by, order: bo } = parseSeason(begin);
+                const e = (cy - by) + (co - bo) / 4;
+                const h = rating.highest;
+                console.log('user: %s, begin: %s, cy: %d, by: %d, co: %d, bo: %d, e: %d, h: %d', rating.user, begin, cy, by, co, bo, e, h)
+                let league = 'N';
+                if (e >= 1 || h >= 400) league = 'C';
+                if (e >= 3 || h >= 800) league = 'B';
+                if (h >= 1200) league = 'A';
+
+                return (
+                  <tr key={rating.user}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <a
+                        href={`https://atcoder.jp/users/${rating.user}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: getRatingColor(rating.newRating),
+                          fontWeight: 'bold',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {rating.user}
+                      </a>
+                    </td>
+                    <td>{league}</td>
+                    <td style={{ color: getRatingColor(rating.newRating) }}>{rating.newRating}</td>
+                    <td style={{ color: getRatingColor(rating.highest) }}>{rating.highest}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
