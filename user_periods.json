@@ -9,13 +9,14 @@
     "toufu24": {"start": "202304", "end": "202803", "begin": "2022summer"},
     "nigs": {"start": "202304", "end": "202703", "begin": "2022spring"},
     "m0w0mY": {"start": "202304", "end": "202803", "begin": "2022winter"},
-    "kinsenka": {"start": "202304", "end": "202803", "begin": "2022winter"},
+    "kinsenka": {"start": "202304", "end": "202803", "begin": "2022spring"},
     "SaSaSato": {"start": "202304", "end": "202803", "begin": "2021winter"},
     "OJII3": {"start": "202304", "end": "202803", "begin": "2022autumn"},
     "shimaaa": {"start": "202304", "end": "202803", "begin": "2023spring"},
     "uPis": {"start": "202304", "end": "202803", "begin": "2023spring"},
     "yugudora": {"start": "202304", "end": "202803", "begin": "2023spring"},
     "tyantama": {"start": "202304", "end": "202803", "begin": "2023spring"},
+    "bannt": {"start": "202304", "end": "202803", "begin": "2023summer"},
     "Yufox": {"start": "202404", "end": "202803", "begin": "2022spring"},
     "ru322": {"start": "202404", "end": "202803", "begin": "2024spring"},
     "mr63tnegi": {"start": "202404", "end": "202703", "begin": "2023winter"},
@@ -26,7 +27,7 @@
     "genchan_omega": {"start": "202304", "end": "202703", "begin": "2024spring"},
     "shun_shobon": {"start": "202404", "end": "202803", "begin": "2021autumn"},
     "konpeitoo11": {"start": "202404", "end": "202803", "begin": "2024spring"},
-    "phenol256": {"start": "202404", "end": "202803", "begin": "2021winter"},
+    "phenol256": {"start": "202404", "end": "202803", "begin": "2024spring"},
     "marimontanus": {"start": "202404", "end": "202803", "begin": "2024spring"},
     "iru28": {"start": "202404", "end": "202803", "begin": "2024summer"},
     "Supacampas": {"start": "202404", "end": "202803", "begin": "2025spring"},
@@ -41,5 +42,6 @@
     "OhbaTakahiro": {"start": "202504", "end": "202803", "begin": "2025spring"},
     "s252151u": {"start": "202504", "end": "202803", "begin": "2025spring"},
     "sassyo": {"start": "202504", "end": "202803", "begin": "2025spring"},
-    "takashi3626": {"start": "202504", "end": "202803", "begin": "2025spring"}
+    "takashi3626": {"start": "202504", "end": "202803", "begin": "2025spring"},
+    "hokki": {"start": "202404", "end": "202603", "begin": "2020spring"}
 }
