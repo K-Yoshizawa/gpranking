@@ -99,7 +99,7 @@ function Rating() {
             });
           }
         }
-        
+
         results.sort((a, b) => b.newRating - a.newRating);
 
         setRatings(results);
@@ -145,11 +145,11 @@ function Rating() {
                 const { year: by, order: bo } = parseSeason(begin);
                 const e = (cy - by) + (co - bo) / 4;
                 const h = rating.highest;
-                console.log('user: %s, begin: %s, cy: %d, by: %d, co: %d, bo: %d, e: %d, h: %d', rating.user, begin, cy, by, co, bo, e, h)
-                let league = 'N';
-                if (e >= 1 || h >= 400) league = 'C';
-                if (e >= 3 || h >= 800) league = 'B';
-                if (h >= 1200) league = 'A';
+                // console.log('user: %s, begin: %s, cy: %d, by: %d, co: %d, bo: %d, e: %d, h: %d', rating.user, begin, cy, by, co, bo, e, h)
+                let league = 'Novice';
+                if (e >= 1 || h >= 400) league = 'Compiler';
+                if (e >= 3 || h >= 800) league = 'Builder';
+                if (h >= 1200) league = 'Architect';
 
                 return (
                   <tr key={rating.user}>

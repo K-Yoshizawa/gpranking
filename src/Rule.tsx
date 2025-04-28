@@ -1,4 +1,14 @@
+import { useEffect } from 'react';
+
 function Rule() {
+  // MathJax の初期化・再レンダリング
+  useEffect(() => {
+    const mj = (window as any).MathJax;
+    if (mj && mj.typesetPromise) {
+      mj.typesetPromise();
+    }
+  }, []);
+
   return (
     <div className="rule-container">
       <h1 className="title">Rule</h1>
@@ -11,6 +21,15 @@ function Rule() {
         <li>7 月 ~ 9 月 : Summer Season</li>
         <li>10 月 ~ 12 月 : Autumn Season</li>
         <li>1 月 ~ 3 月 : Winter Season</li>
+      </ul>
+      <h2>League について</h2>
+      <p>ユーザーごとに、競技プログラミング (AtCoder) の歴に応じてリーグ分けがされます。</p>
+      <p>リーグの決定は、そのユーザーの競技プログラミングの歴と Highest をそれぞれ $e, h$ としたとき、次のように行われます。ただし、歴の計算はシーズン単位 (3ヵ月単位) で行われることに注意してください。</p>
+      <ul>
+        <li>$e \lt 1 \rightarrow$ Novice</li>
+        <li>$1 \le e \lor 400 \le h \rightarrow$ Compiler</li>
+        <li>$3 \le e \lor 800 \le h \rightarrow$ Builder</li>
+        <li>$1200 \le h \rightarrow$ Architect</li>
       </ul>
       <h2>Rank GP の計算</h2>
       <p>毎回の ABC の MCC 内順位に応じて、以下の Rank GP が与えられます。</p>
@@ -113,7 +132,7 @@ function Rule() {
       </div>
       <h2>Update GP の計算</h2>
       <p>各 Season 開始時点での Highest Rating から更新した Rating の値(以降 Highest Δ)に応じて Update GP が与えられます。</p>
-      <p>Update GP の計算は、Highest Δ を 4 で割った値の小数点以下切り捨てした値になります。</p>
+      <p>Update GP の計算は、Highest Δ を 4 で割った値の小数点以下切り捨てすることによって行われます。</p>
       <ul>
         <li>例 1 : Highest Δ = 20 の場合、Update GP は 5 となります。</li>
         <li>例 2 : Highest Δ = 2 の場合、Update GP は 0 となります。</li>
